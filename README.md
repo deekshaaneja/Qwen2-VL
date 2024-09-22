@@ -1093,7 +1093,7 @@ In Qwen2-VL, the tokenizer has been updated to handle `im_start` and `im_end` as
     im_end = tokenizer(im_end_token).input_ids[0]
     ```
 
-### Padding Token Update: The padding token ID is explicitly set to `151643`, which is the designated padding token for the Qwen2 model.
+##### Padding Token Update: The padding token ID is explicitly set to `151643`, which is the designated padding token for the Qwen2 model.
 - **Old:**
     ```python
     tokenizer.pad_token_id = tokenizer.eod_id
@@ -1103,7 +1103,7 @@ In Qwen2-VL, the tokenizer has been updated to handle `im_start` and `im_end` as
     tokenizer.pad_token_id = 151643
     ```
 
-### LoRA Target Modules specifies the exact layers that will be fine-tuned using LoRA. By focusing on these projection and gating layers, the training process can be more efficient while still achieving effective adaptation.
+##### LoRA Target Modules specifies the exact layers that will be fine-tuned using LoRA. By focusing on these projection and gating layers, the training process can be more efficient while still achieving effective adaptation.
 The LoRA target modules were previously defined as a single parameter:
 - **Old:**
     ```python
@@ -1117,7 +1117,7 @@ In the updated script, specific attention is given to several key projection lay
                     "gate_proj", "up_proj", "down_proj"},
     ```
 
-## Training Environment
+### FineTuning Environment
 
 The finetuning process is executed on an AWS `g6.8xlarge` instance, which offers a powerful combination of compute, memory, and GPU resources optimized for deep learning tasks. This instance type is equipped with NVIDIA L4 Tensor Core GPUs, ensuring that large-scale finetuning tasks can be handled efficiently.
 
