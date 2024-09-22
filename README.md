@@ -1069,6 +1069,59 @@ Note:
 |  |  | GPTQ-Int4 | 1 | 30.73 | 29.84 |
 |  |  | AWQ | 1 | 31.55 | 29.84 |
 
+
+# Finetuning
+
+This repository contains the modified finetuning script for Qwen2-VL, adapted from the original Qwen-VL finetuning file. The script is optimized for training on custom data, with updates to the tokenizer and LoRA (Low-Rank Adaptation) parameters. 
+
+## Changes in the Script
+
+### Tokenizer Changes
+In the original Qwen1 finetuning script, the `im_start` and `im_end` tokens were defined using direct token IDs:
+- **Old:**
+    ```python
+    im_start = tokenizer.im_start_id
+    im_end = tokenizer.im_end_id
+    ```
+
+In Qwen2-VL, the tokenizer has been updated to handle `im_start` and `im_end` as tokenized strings. Instead of directly using the token IDs, the `im_start` and `im_end` tokens are now tokenized from their string representations. This ensures compatibility with the updated tokenizer, making the code more flexible for handling special tokens.
+- **New:**
+    ```python
+    im_start_token = "<|im_start|>"
+    im_end_token = "<|im_end|>"
+    im_start = tokenizer(im_start_token).input_ids[0]
+    im_end = tokenizer(im_end_token).input_ids[0]
+    ```
+
+### Padding Token Update: The padding token ID is explicitly set to `151643`, which is the designated padding token for the Qwen2 model.
+- **Old:**
+    ```python
+    tokenizer.pad_token_id = tokenizer.eod_id
+    ```
+- **New:**
+    ```python
+    tokenizer.pad_token_id = 151643
+    ```
+
+### LoRA Target Modules specifies the exact layers that will be fine-tuned using LoRA. By focusing on these projection and gating layers, the training process can be more efficient while still achieving effective adaptation.
+The LoRA target modules were previously defined as a single parameter:
+- **Old:**
+    ```python
+    target_modules=lora_args.lora_target_modules,
+    ```
+
+In the updated script, specific attention is given to several key projection layers:
+- **New:**
+    ```python
+    target_modules={"q_proj", "k_proj", "v_proj", "o_proj",
+                    "gate_proj", "up_proj", "down_proj"},
+    ```
+
+## Training Environment
+
+The finetuning process is executed on an AWS `g6.8xlarge` instance, which offers a powerful combination of compute, memory, and GPU resources optimized for deep learning tasks. This instance type is equipped with NVIDIA L4 Tensor Core GPUs, ensuring that large-scale finetuning tasks can be handled efficiently.
+
+
 ## Deployment
 
 We recommend using vLLM for fast Qwen2-VL deployment and inference. You can use [this fork](https://github.com/fyabc/vllm/tree/add_qwen2_vl_new) (we are working on merging this PR into vLLM main repository).
