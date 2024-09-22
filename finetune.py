@@ -259,7 +259,7 @@ def make_supervised_data_module(
 def train():
     global local_rank
 
-    output_dir = "/home/ubuntu/deeksha/db-adtech-vl/qwen2_vl_model/output"
+    output_dir = "qwen2_vl_model/output"
     parser = transformers.HfArgumentParser(
         (ModelArguments, DataArguments, TrainingArguments, LoraArguments)
     )
