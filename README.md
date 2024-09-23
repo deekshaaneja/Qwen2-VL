@@ -1,4 +1,4 @@
-# Qwen2-VL
+# Qwen2-VL (With Support of Finetuning) 
 
 
 <p align="center">
